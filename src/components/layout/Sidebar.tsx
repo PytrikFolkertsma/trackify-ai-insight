@@ -1,81 +1,51 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
-  BarChart3, 
-  ChevronLeft, 
-  ChevronRight, 
+  BarChart3,
   Gauge, 
   ListTodo, 
   MessageSquare, 
   Settings
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  Sidebar as SidebarComponent,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarFooter
+} from "@/components/ui/sidebar";
 
 export const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  const toggleSidebar = () => {
-    setCollapsed(!collapsed);
-  };
-
   return (
-    <aside 
-      className={cn(
-        "bg-sidebar border-r border-sidebar-border transition-all duration-300 flex flex-col",
-        collapsed ? "w-16" : "w-64"
-      )}
-    >
-      <div className="p-4 flex items-center justify-between border-b border-sidebar-border">
-        {!collapsed && (
-          <h1 className="text-lg font-bold text-sidebar-foreground">Trackify</h1>
-        )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-sidebar-foreground hover:text-sidebar-primary hover:bg-sidebar-accent ml-auto"
-          onClick={toggleSidebar}
-        >
-          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
-        </Button>
-      </div>
-      
-      <nav className="flex-1 py-4">
-        <ul className="space-y-1 px-2">
-          <NavItem 
-            to="/" 
-            icon={<Gauge size={20} />} 
-            text="Dashboard" 
-            collapsed={collapsed} 
-          />
-          <NavItem 
-            to="/categories" 
-            icon={<ListTodo size={20} />} 
-            text="Categories" 
-            collapsed={collapsed} 
-          />
-          <NavItem 
-            to="/logger" 
-            icon={<MessageSquare size={20} />} 
-            text="Logger" 
-            collapsed={collapsed} 
-          />
-          <NavItem 
-            to="/analytics" 
-            icon={<BarChart3 size={20} />} 
-            text="Analytics" 
-            collapsed={collapsed} 
-          />
-          <NavItem 
-            to="/feedback" 
-            icon={<Settings size={20} />} 
-            text="Feedback" 
-            collapsed={collapsed} 
-          />
-        </ul>
-      </nav>
-    </aside>
+    <SidebarProvider defaultOpen={window.innerWidth >= 768}>
+      <SidebarComponent collapsible="offcanvas" variant="sidebar">
+        <SidebarHeader>
+          <div className="p-2">
+            <h2 className="text-lg font-bold text-sidebar-foreground">Trackify</h2>
+          </div>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            <NavItem to="/" icon={<Gauge size={20} />} text="Dashboard" />
+            <NavItem to="/categories" icon={<ListTodo size={20} />} text="Categories" />
+            <NavItem to="/logger" icon={<MessageSquare size={20} />} text="Logger" />
+            <NavItem to="/analytics" icon={<BarChart3 size={20} />} text="Analytics" />
+            <NavItem to="/feedback" icon={<Settings size={20} />} text="Feedback" />
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter>
+          <div className="p-2 text-xs text-sidebar-foreground/60">
+            © {new Date().getFullYear()} Trackify
+          </div>
+        </SidebarFooter>
+      </SidebarComponent>
+    </SidebarProvider>
   );
 };
 
@@ -83,27 +53,26 @@ interface NavItemProps {
   to: string;
   icon: React.ReactNode;
   text: string;
-  collapsed: boolean;
 }
 
-const NavItem = ({ to, icon, text, collapsed }: NavItemProps) => {
+const NavItem = ({ to, icon, text }: NavItemProps) => {
   return (
-    <li>
-      <NavLink
-        to={to}
-        className={({ isActive }) =>
-          cn(
-            "flex items-center rounded-md px-3 py-2 text-sm transition-colors",
-            isActive
-              ? "bg-sidebar-primary text-sidebar-primary-foreground"
-              : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
-            collapsed ? "justify-center" : ""
-          )
-        }
-      >
-        {icon}
-        {!collapsed && <span className="ml-3">{text}</span>}
-      </NavLink>
-    </li>
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild tooltip={text}>
+        <NavLink
+          to={to}
+          className={({ isActive }) =>
+            cn(
+              isActive
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+            )
+          }
+        >
+          {icon}
+          <span>{text}</span>
+        </NavLink>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
   );
 };
