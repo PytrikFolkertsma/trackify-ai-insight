@@ -27,20 +27,18 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route element={
-                <SidebarProvider defaultOpen={window.innerWidth >= 768}>
-                  <AppLayout />
-                </SidebarProvider>
-              }>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/categories" element={<Categories />} />
-                <Route path="/logger" element={<Logger />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/feedback" element={<Feedback />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <SidebarProvider defaultOpen={window.innerWidth >= 768}>
+              <Routes>
+                <Route element={<AppLayout />}>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/logger" element={<Logger />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/feedback" element={<Feedback />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </SidebarProvider>
           </BrowserRouter>
         </TooltipProvider>
       </AppProvider>
