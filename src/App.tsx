@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { AppProvider } from "@/contexts/AppContext";
 import { AppLayout } from "@/components/layout/AppLayout";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 // Pages
 import Dashboard from "./pages/Dashboard";
@@ -27,7 +28,11 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route element={<AppLayout />}>
+              <Route element={
+                <SidebarProvider defaultOpen={window.innerWidth >= 768}>
+                  <AppLayout />
+                </SidebarProvider>
+              }>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/categories" element={<Categories />} />
                 <Route path="/logger" element={<Logger />} />
